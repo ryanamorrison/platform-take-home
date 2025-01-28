@@ -1,12 +1,13 @@
-name: test
+name: Test
 
 on:
   push:
-    branches: [main]
+    branches: ['*']
   pull_request:
     branches: [main]
 
 jobs:
+
   test:
     runs-on: ubuntu-20.04
     steps:
