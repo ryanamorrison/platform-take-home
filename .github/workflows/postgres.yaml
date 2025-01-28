@@ -9,7 +9,7 @@ on:
 
 env:
   REG: ghcr.io
-  NAME: postgres-preloaded 
+  NAME: postgres_preloaded 
 
 jobs:
   build_and_publish:
