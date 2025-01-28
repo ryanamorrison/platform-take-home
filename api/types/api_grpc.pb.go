@@ -37,12 +37,10 @@ type takeHomeServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-// NewTakeHomeServiceClient does ...
 func NewTakeHomeServiceClient(cc grpc.ClientConnInterface) TakeHomeServiceClient {
 	return &takeHomeServiceClient{cc}
 }
 
-// GetItems does ...
 func (c *takeHomeServiceClient) GetItems(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetItemsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetItemsResponse)
@@ -53,7 +51,6 @@ func (c *takeHomeServiceClient) GetItems(ctx context.Context, in *EmptyRequest, 
 	return out, nil
 }
 
-// GetItem does ...
 func (c *takeHomeServiceClient) GetItem(ctx context.Context, in *GetItemRequest, opts ...grpc.CallOption) (*GetItemResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetItemResponse)
@@ -64,7 +61,6 @@ func (c *takeHomeServiceClient) GetItem(ctx context.Context, in *GetItemRequest,
 	return out, nil
 }
 
-// CreateItem does ...
 func (c *takeHomeServiceClient) CreateItem(ctx context.Context, in *CreateItemRequest, opts ...grpc.CallOption) (*CreateItemResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateItemResponse)
@@ -92,17 +88,12 @@ type TakeHomeServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTakeHomeServiceServer struct{}
 
-// GetItems does ...
 func (UnimplementedTakeHomeServiceServer) GetItems(context.Context, *EmptyRequest) (*GetItemsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetItems not implemented")
 }
-
-// GetItem does ...
 func (UnimplementedTakeHomeServiceServer) GetItem(context.Context, *GetItemRequest) (*GetItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetItem not implemented")
 }
-
-// CreateItem does ...
 func (UnimplementedTakeHomeServiceServer) CreateItem(context.Context, *CreateItemRequest) (*CreateItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateItem not implemented")
 }
