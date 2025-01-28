@@ -13,6 +13,7 @@ import (
 	"net/http"
 )
 
+// ServeMetrics does ...
 func ServeMetrics(ctx context.Context, host string, port uint) error {
 	exporter, err := prometheus.New()
 	if err != nil {

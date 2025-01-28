@@ -2,6 +2,7 @@ package store
 
 import "context"
 
+// GetItem does ...
 func (s *DBStore) GetItem(ctx context.Context, id uint) (*Item, error) {
 	var item Item
 
@@ -10,6 +11,7 @@ func (s *DBStore) GetItem(ctx context.Context, id uint) (*Item, error) {
 	return &item, err
 }
 
+// GetItems does ...
 func (s *DBStore) GetItems(ctx context.Context) ([]Item, error) {
 	var items []Item
 	err := s.DB.WithContext(ctx).Find(&items).Error
@@ -17,6 +19,7 @@ func (s *DBStore) GetItems(ctx context.Context) ([]Item, error) {
 	return items, err
 }
 
+// CreateItem does ...
 func (s *DBStore) CreateItem(ctx context.Context, name, description string) (uint, error) {
 	item := Item{
 		Name:        name,

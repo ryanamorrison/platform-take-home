@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// DefaultLogger does ...
 func DefaultLogger(options ...zap.Option) (*zap.Logger, error) {
 	if os.Getenv("DEV_LOGGING") == "true" {
 		return zap.NewDevelopment(options...)
@@ -19,6 +20,7 @@ func DefaultLogger(options ...zap.Option) (*zap.Logger, error) {
 	return zap.NewProduction(options...)
 }
 
+// WithDefaultLogger does ...
 func WithDefaultLogger(ctx context.Context, options ...zap.Option) (context.Context, error) {
 	logger, err := DefaultLogger(options...)
 	if err != nil {
@@ -35,14 +37,17 @@ var (
 	serviceLabelKey key = 1
 )
 
+// WithLogger does ...
 func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
 	return context.WithValue(ctx, loggerKey, logger)
 }
 
+// WithServiceLabel does ...
 func WithServiceLabel(ctx context.Context, service string) context.Context {
 	return context.WithValue(ctx, serviceLabelKey, service)
 }
 
+// TraceIDFromContext does ...
 func TraceIDFromContext(ctx context.Context) (trace.TraceID, bool) {
 	spanContext := trace.SpanContextFromContext(ctx)
 	if spanContext.IsValid() {
@@ -51,6 +56,7 @@ func TraceIDFromContext(ctx context.Context) (trace.TraceID, bool) {
 	return trace.TraceID{}, false
 }
 
+// FromContext does ...
 func FromContext(ctx context.Context) *zap.Logger {
 	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
 	if !ok {
@@ -75,6 +81,7 @@ func FromContext(ctx context.Context) *zap.Logger {
 	return logger
 }
 
+// UnaryServerInterceptor does ...
 func UnaryServerInterceptor(logger *zap.Logger, sampleRate float64) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		loggerForContext := logger
@@ -90,6 +97,7 @@ func UnaryServerInterceptor(logger *zap.Logger, sampleRate float64) grpc.UnarySe
 	}
 }
 
+// DefaultLoggingContext does ...
 func DefaultLoggingContext() context.Context {
 	ctx, err := WithDefaultLogger(context.Background())
 	if err != nil {

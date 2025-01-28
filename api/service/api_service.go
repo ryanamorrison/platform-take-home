@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// TakeHomeService is ...
 type TakeHomeService struct {
 	store *store.DBStore
 	types.UnimplementedTakeHomeServiceServer
@@ -16,10 +17,12 @@ type TakeHomeService struct {
 
 var _ types.TakeHomeServiceServer = &TakeHomeService{}
 
+// NewTakeHomeService does ...
 func NewTakeHomeService(store *store.DBStore) *TakeHomeService {
 	return &TakeHomeService{store: store}
 }
 
+// GetItems does ...
 func (s *TakeHomeService) GetItems(ctx context.Context, _ *types.EmptyRequest) (*types.GetItemsResponse, error) {
 	items, err := s.store.GetItems(ctx)
 
@@ -41,6 +44,7 @@ func (s *TakeHomeService) GetItems(ctx context.Context, _ *types.EmptyRequest) (
 	return &types.GetItemsResponse{Items: apiItems}, nil
 }
 
+// GetItem does ...
 func (s *TakeHomeService) GetItem(ctx context.Context, req *types.GetItemRequest) (*types.GetItemResponse, error) {
 	item, err := s.store.GetItem(ctx, uint(req.Id))
 
@@ -58,6 +62,7 @@ func (s *TakeHomeService) GetItem(ctx context.Context, req *types.GetItemRequest
 	}, nil
 }
 
+// CreateItem does ...
 func (s *TakeHomeService) CreateItem(ctx context.Context, req *types.CreateItemRequest) (*types.CreateItemResponse, error) {
 	item, err := s.store.CreateItem(ctx, req.Item.Name, req.Item.Description)
 

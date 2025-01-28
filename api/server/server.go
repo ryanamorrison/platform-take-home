@@ -15,10 +15,12 @@ import (
 	"net"
 )
 
+// Server is ...
 type Server struct {
 	grpcServer *grpc.Server
 }
 
+// NewServer does ...
 func NewServer() *Server {
 	return &Server{
 		grpcServer: grpc.NewServer(
@@ -27,6 +29,7 @@ func NewServer() *Server {
 	}
 }
 
+// Start does ...
 func (s *Server) Start(ctx context.Context, address string) error {
 	listener, err := net.Listen("tcp", address)
 
