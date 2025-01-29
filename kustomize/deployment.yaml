@@ -4,14 +4,14 @@ metadata:
   name: platform-take-home 
   labels:
     app: platform-take-home
-  namespace: default
+  namespace: platform-take-home-test 
 spec:
   replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 50%
-      maxSurge: 50% 
+      maxSurge: 1 
   selector:
     matchLabels:
       app: platform-take-home
@@ -24,9 +24,33 @@ spec:
       - name: postgres
         image: ghcr.io/ryanamorrison/postgres-image:latest 
         ports:
-        - containerPort: 5432 
+        - containerPort: 5432
+        readinessProbe:
+          exec:
+            command: ["psql", "-U", "postgres", "-c", "SELECT 1 FROM items;"]
+          initialDelaySeconds: 30 
+          timeoutSeconds: 2
+        livenessProbe:
+          exec:
+            command: ["psql", "-U", "postgres", "-c", "SELECT 1 FROM items;"]
+          initialDelaySeconds: 45 
+          timeoutSeconds: 2
       - name: platform-take-home
-        image: ghcr.io/ryanamorrison/platform-take-home:latest
+        image: ghcr.io/ryanamorrison/platform-take-home:ram-takehome
         ports:
-        - containerPort: 9008
+        - containerPort: 8081 
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          failureThreshold: 2
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 45
+          failureThreshold: 2
 

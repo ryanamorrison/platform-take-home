@@ -3,7 +3,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: platform-take-home
-  namespace: default 
+  namespace: platform-take-home-test 
   labels:
     app: platform-take-home
 spec:
