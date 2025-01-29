@@ -2,27 +2,38 @@
 
 ### Complaints:
 > “The process in manual and error prone”
+
 CI and CD/GitOps will solve this problem.  The CI process for building and packaging is automated and repeatable.  Without some of the configuration details from ArgoCD it would have been difficult to have created an end-to-end working example.  However, once CI has been run, and the code is pushed to a target branch such as *main*, *test*, *staging* or *prod*, ArgoCD will notice changes for the repo and branch it is configured for and reconcile those changes via the provided `kustomize` folder.  The advantage is that once ArgoCD is configured via its own git repo, engineers can fully deploy without having to engage SRE/DevOps/infra engineers.
 > “Whenever a deployment happens, we suffer a tiny bit of downtime due to the server being down.”
+
 Because Kubernetes is being used, this is solved using the `RollingUpdate` deployment strategy.  The settings provided in `kustomize/deployment.yaml` were guessed at for this application but they can be fine-tuned based on the deployment.  Usually this works best when used with Readiness and Liveness probes also provided.
 > “there's no standardization for code formatting which leads to inconsistencies”
+
 This was solved by adding a custom pre-commit hook (`.git/hooks/pre-commit`) which will execute `go fmt` on every commit.  A custom script is used rather than the popular pre-commit.com because there is another script that is being run on every commit also…
+
 > “the proto-gen script is ran locally which leads to developers forgetting to do it before pushing code upstream”
+
 Also solved with pre-commit since it does not seem to take that long to run.
 > “downloading the tooling dependencies is a manual, undocumented process”
+
 This is solved with a CI workflow and GitHub Actions.  The workflow will download dependencies, vet the code, lint the code, test the code, build the code and package it into a container.  Static testing was attempted but there are some issues with grpc and the golang tools so that job stage was commented out for further investigation.  Some of the exported golang functions and objects needed comments for the linter to approve them so they have been added.  Additionally, one test for the `store/` was added so that the testing stage had something to test.  
 > “running the server locally is a bit of a pain,”
+
 Yes, but Kubernetes is available and EKS assumed.  Testing can be done via a separate cluster if budget allows as the isolation provides an additional guardrail.  Alternatively, separate namespaces can be used in the same cluster.  
+
 > “since it requires manually standing up a Postgres database (to replicate prod)”
+
 The database could be solved a couple of different ways.  One would be to use the regular postgres container image and provide a migration.  The other is to simply pre-bake a test dataset into a postgres container.  The latter is what was chosen here.  Which is the most optimal really depends on the environment.  There are ways to have separate containers in a mono repo but the results looked messy unless one uses an external repo like Dockerhub (as opposed to the built-in one that is free with the GitHub repo).  The only drawback with the latter is that by using the native GH container registry, sensitive login information is hidden.  Using an external repo requires some additional configuration.
 > “there's no easy way to share a feature update with our colleagues, since we only have a local and production environment.”
+
 Since Kubernetes is being used but there was no way to access the environment for this take-home test, this particular point isn’t fully addressed in code.  What is assumed here is that ArgoCD would be configured to publish new features to a test deployment in an EKS cluster and that those changes would be viewable to others.
+
 ### Deliverables
 > “In the README, please provide instructions on how to run your solution (whether locally or in cloud).”
-Configure ArgoCD to watch a specific branch on the following repo and push the code to that branch.
+
+Configure ArgoCD to watch a specific branch on the following repo and push the code to that branch.   
 https://github.com/ryanamorrison/platform-take-home/pkgs/container/platform-take-home
-Nothing has been pushed to `main` yet so that branch could be used for ArgoCD.
-The additional postgres repo, referenced in the `deployment.yaml` is here:
+Nothing has been pushed to `main` yet so that branch could be used for ArgoCD. The additional postgres repo, referenced in the `deployment.yaml` is here:   
 https://github.com/ryanamorrison/postgres-image
 
 ### Additional Note on Testing:
