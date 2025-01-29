@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-take-home 
+  labels:
+    app: platform-take-home
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: platform-take-home
+  template:
+    metadata:
+      labels:
+        app: platform-take-home
+    spec:
+      containers:
+      - name: postgres
+        image: ghcr.io/ryanamorrison/postgres-image:latest 
+        ports:
+        - containerPort: 5432 
+      - name: platform-take-home
+        image: ghcr.io/ryanamorrison/platform-take-home:latest
+        ports:
+        - containerPort: 9008
+
