@@ -65,6 +65,7 @@ jobs:
           images: ${{ env.REG }}/${{ env.NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
 
       - name: build and push api image
         uses: docker/build-push-action@v6
